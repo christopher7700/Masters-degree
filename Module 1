@@ -1,0 +1,413 @@
+/* Creacion de una Base de Datos
+Autor: Christopher A. Rodriguez Principe
+Fecha de Entrega: 4/10/2021
+Programa escrito en MAC*/
+
+-- ---------------------------------------------------------------------------- 
+
+drop database if exists TiendaAplicaciones;
+create database TiendaAplicaciones;
+use TiendaAplicaciones;
+
+-- ----------------------------------------------------------------------------
+-- 									CREAR TABLAS
+-- ----------------------------------------------------------------------------
+
+
+create table Empresa_Servicio(
+	Nombre_E varchar (20) not null,
+    Ano_fundacion year,
+    Pais_Tax char(3),
+    Web varchar(20),
+    Correo varchar(40),
+    primary key (Nombre_E)
+    );
+   
+create table Aplicaciones(
+	NombreApp varchar(20) not null,
+    Codigo char(5),
+    Memoria varchar(10),
+    Precio decimal(6,2),
+    Category varchar(20),
+    primary key (NombreApp)
+    );
+
+create table Empleados(
+	DNI varchar (20)  not null,
+    Nombre_E varchar (20) not null,
+    CorreoEmp varchar(20),
+    Movil  numeric(9,0),
+    CodigoPostal numeric(5,0),
+    Calle varchar(50),
+    primary key (DNI,Nombre_E),
+    foreign key (Nombre_E) references Empresa_Servicio(Nombre_E) on delete cascade ON UPDATE CASCADE 
+	);
+
+create table Usuario(
+	Num_Cuenta varchar(5)   not null,
+	Nombre varchar(20) not null,
+    Pais char(3),
+    Correo varchar(40),
+    primary key (Num_Cuenta)
+    );
+
+create table Tienda_App(
+	NombreT varchar (20) not null,
+    Nombre_E varchar (20) not null,
+    Web varchar (20),
+    primary key (NombreT),
+    foreign key (Nombre_E) references Empresa_Servicio(Nombre_E) on delete cascade ON UPDATE CASCADE 
+	); 
+
+create table Realizan(
+	Nombre_E varchar (20) not null, 
+    NombreApp varchar(20),
+    Fecha_Ini date,  
+    FechaFin date, 
+    primary key (Nombre_E,NombreApp,FechaFin),
+    foreign key (Nombre_E) references Empresa_Servicio(Nombre_E) on delete cascade ,
+    foreign key (NombreApp) references Aplicaciones(NombreApp) on delete cascade 
+	); 
+
+
+ create table Trabajan(
+    DNI varchar (20)  not null,
+    Nombre_E varchar (20), 
+    Fecha_Ini Year,
+    FechaFin varchar(10),
+    Primary key (DNI,Nombre_E,Fecha_Ini),
+    foreign key (Nombre_E) references Empresa_Servicio(Nombre_E) on delete cascade,
+	foreign key (DNI) references Empleados(DNI)on delete cascade 
+	); 
+ 
+
+
+create table Descarga(
+	Num_Cuenta varchar(5) not null,
+	NombreApp varchar(20),
+    Puntuacion integer check( Puntuacion <=5),
+    FechaDescarga date,
+    Pais char(3),
+    primary key (Num_Cuenta,NombreApp,FechaDescarga),
+    foreign key (Num_Cuenta) references Usuario(Num_Cuenta) on delete cascade ON UPDATE CASCADE,
+    foreign key (NombreApp) references Aplicaciones(NombreApp) on delete cascade 
+	);
+
+
+-- --------------------------------------------------------------------------------------------------
+-- 			INSERTAR VALORES MEDIANTE 'INSERT INTO' O AGREGAR LOS DOCUMENTOS CVS INCLUIDOS 		 --	
+--          para instalar mediante Import Wizard debe Eliminar las "Insert into" para que no error.
+-- --------------------------------------------------------------------------------------------------
+insert into Empresa_Servicio Values('Google','1982','USA','Google.com','GoogleMail@.com');
+insert into Empresa_Servicio Values('Apple','1980','USA','Apple.com','AppleMail@.com');
+insert into Empresa_Servicio Values('Blackberry','1972','ENG','blackberry.com','BlackberryMail@.com');
+insert into Empresa_Servicio Values('Nokia','1972','JPN','Nokia.com','NokiaMail@.com');
+insert into Empresa_Servicio Values('WindowsPhone','1992','JPN','WindowsPhone.com','WindowsMail@.com');
+insert into Empresa_Servicio Values('HP','1970','JPN','HP.com','HP@.com');
+insert into Empresa_Servicio Values('Amazon','2003','USA','Amazon.com','Amazon@.com');
+
+
+insert into Aplicaciones values('Calendar','001','111.1 MB','0.00','Utilidad');
+insert into Aplicaciones values('Gmail','002','141.1 MB','0.99','Entretenimineto');
+insert into Aplicaciones values('Wework','003','311.1 MB','0.99','Social');
+insert into Aplicaciones values('XboxChat','004','131.5 MB','4.99','Social');
+insert into Aplicaciones values('Camera','005','431.1 MB','0.99','Utilidad');
+insert into Aplicaciones values('Translator','006','100.3 MB','2.99','Utilidad');
+insert into Aplicaciones values('facetime','007','131.5 MB','0.00','Social');
+insert into Aplicaciones values('Imessage','008','431.05 MB','0.00','Social');
+insert into Aplicaciones values('Notes','009','134.5 MB','0.99','Utilidad');
+
+
+insert into Empleados values ('001','Google','CorreoGmail','123456819','00969','Calle. Luz');
+insert into Empleados values ('002','Google','CorreoGmail','123456820','00970','Calle.Sol');
+insert into Empleados values ('003','Google','CorreoGmail','123456821','00971','Calle.Luna');
+insert into Empleados values ('004','Google','CorreoGmail','123456822','00972','Calle.mercurio');
+insert into Empleados values ('005','Google','CorreoGmail','123456823','00973','Calle.venus');
+insert into Empleados values ('006','Google','CorreoGmail','123456824','00974','Calle.tierra');
+insert into Empleados values ('007','Apple','CorreoGmail','123456825','00975','Calle.martes');
+insert into Empleados values ('008','Apple','CorreoApple','123456826','00969','Calle.jupiter');
+insert into Empleados values ('009','Amazon','CorreoAmazon','123456827','00970','Calle.saturno');
+insert into Empleados values ('010','Blackberry','CorreoBlackberry','123456828','00971','Calle.urano');
+insert into Empleados values ('011','Blackberry','CorreoBlackberry','123456829','00972','calle.neptuni');
+insert into Empleados values ('012','WindowsPhone','CoreoWindows','123456830','00565','Calle.DaddyYankee');
+insert into Empleados values ('013','WindowsPhone','CoreoWindows',	'123456831','00566','Calle.BadBunny');
+insert into Empleados values ('014','WindowsPhone',	'CoreoWindows','123456832','00567','Calle.Tito el Bambino');
+insert into Empleados values ('015','Amazon','CoreoAmazon','123456833','00568','Calle.Residente');
+insert into Empleados values ('016','HP','CoreoHP','123456834','00569','Calle.JustinBieber');
+insert into Empleados values ('017','HP','CoreoHP','123456835','00570',	'Calle. Necesitoayuda');
+insert into Empleados values ('018','Nokia','CorreoNokia','123456836','00571','Calle.conEsteProyecto');
+insert into Empleados values ('019','Nokia','CorreoNokia','123456837','00572','Calle.nose');
+insert into Empleados values ('020','Apple','CorreoApple','123456837','00572','Calle.nose'); 
+
+--
+insert into Usuario(Num_Cuenta,	Nombre,	Pais,	Correo)  values ('00001','Luis Raul','USA','Luis.RaulEmail');
+insert into Usuario(Num_Cuenta,	Nombre,	Pais,	Correo)  values ('00002','Jose Rodriguez','FRN','Jose.RodriguezEmail');
+insert into Usuario(Num_Cuenta,	Nombre,	Pais,	Correo)  values ('00003','Manuela Gisel','ALM','ManuelaEmail');
+insert into Usuario(Num_Cuenta,	Nombre,	Pais,	Correo)  values ('00004','Sofia Bauza','ENG','SofiaEmail');
+insert into Usuario(Num_Cuenta,	Nombre,	Pais,	Correo)  values ('00005','Paco San Miguel','JPN','PacoEmail');
+insert into Usuario(Num_Cuenta,	Nombre,	Pais,	Correo)  values ('00006','Carlos Guzman','CHN','CalosEmail');
+insert into Usuario(Num_Cuenta,	Nombre,	Pais,	Correo)  values ('00007','Isabella San Miguel',	'CHN','IsabellaEmail');
+insert into Usuario(Num_Cuenta,	Nombre,	Pais,	Correo)  values ('00008',' Chris Angel','CHN','ChrisEmail');
+
+INSERT INTO Tienda_App(NombreT,Nombre_E,Web) Values ('GooglePlay','Google','APPGoogle.com');
+INSERT INTO Tienda_App(NombreT,Nombre_E,Web) Values  ('App store','Apple','APPApple.com');
+INSERT INTO Tienda_App(NombreT,Nombre_E,Web) Values  ('App World','Blackberry','APPblackberry.com');
+INSERT INTO Tienda_App(NombreT,Nombre_E,Web) Values  ('MarketPlace','WindowsPhone','APPWindows.com');
+INSERT INTO Tienda_App(NombreT,Nombre_E,Web) Values ('OviTienda','Nokia','APPNokia.com');
+INSERT INTO Tienda_App(NombreT,Nombre_E,Web) Values ('AppCatalog','HP','APPHP.com');
+INSERT INTO Tienda_App(NombreT,Nombre_E,Web) Values ('AppStore','Amazon','APPAmazon.com');
+
+
+insert into Realizan(Nombre_E, NombreApp,Fecha_Ini,FechaFin)  values ('Apple','facetime','2000-10-10','2010-10-11');
+INSERT INTO Realizan(Nombre_E, NombreApp,Fecha_Ini,FechaFin) Values ('Apple','Calendar','2000-10-10','2010-10-11');
+INSERT INTO Realizan(Nombre_E, NombreApp,Fecha_Ini,FechaFin) Values ('Apple','Imessage','2000-10-10','2010-10-11');
+INSERT INTO Realizan(Nombre_E, NombreApp,Fecha_Ini,FechaFin) Values ('Amazon',	'Notes','2000-10-10','2010-10-11');
+INSERT INTO Realizan(Nombre_E, NombreApp,Fecha_Ini,FechaFin) Values ('Google','Gmail','2000-10-10','2010-10-12');
+INSERT INTO Realizan(Nombre_E, NombreApp,Fecha_Ini,FechaFin) Values ('HP','Translator','2000-10-10','2010-10-16');
+INSERT INTO Realizan(Nombre_E, NombreApp,Fecha_Ini,FechaFin) Values ('Nokia', 'Camera','2000-10-10','2010-10-15');
+INSERT INTO Realizan(Nombre_E, NombreApp,Fecha_Ini,FechaFin) Values ('WindowsPhone','XboxChat',	'2000-10-10','2010-10-14');
+
+-- 
+insert into Trabajan values('001','Google','2001',' ');
+insert into Trabajan values('002','Google','2002',' ');
+insert into Trabajan values('003','Google','2003',' ');
+insert into Trabajan values('004','Google','2004',' ');
+insert into Trabajan values('005','Google','2005',' ');
+insert into Trabajan values('006','Google','2006',' ');
+insert into Trabajan values('007','Apple','2007',' ');
+insert into Trabajan values('008','Apple','2008',' ');
+insert into Trabajan values('009','Amazon','2009',' ');
+insert into Trabajan values('010','Blackberry','2010',' ');
+insert into Trabajan values('011','Blackberry','2011',' ');
+insert into Trabajan values('012','WindowsPhone','2012',' ');
+insert into Trabajan values('013','WindowsPhone','2013',' ');
+insert into Trabajan values('014','WindowsPhone','2014',' ');
+insert into Trabajan values('015','Amazon','2015',' ');
+insert into Trabajan values('016','HP','2016',' ');
+insert into Trabajan values('017','HP','2017',' ');
+insert into Trabajan values('018','Nokia','2018',' ');
+insert into Trabajan values('019','Nokia','2019','2020');
+insert into Trabajan values('019','Apple','2020','2021');
+
+-- 
+Insert into Descarga values ('00001','facetime', '5', '2015-10-10','USA');
+Insert into Descarga values ('00001','Imessage', '3', '2015-10-10','USA');
+Insert into Descarga values ('00002','Calendar', '4', '2015-10-10','FRN');
+Insert into Descarga values ('00003','Gmail', '2', '2015-10-10','ALM');
+Insert into Descarga values ('00004','Wework', '1', '2015-10-10','ENG');
+Insert into Descarga values ('00005','XboxChat', '3', '2015-10-10','JPN');
+Insert into Descarga values ('00006','Camera', '4', '2015-10-10','CHN');
+Insert into Descarga values ('00007','facetime', '5', '2015-10-10','CHN');
+Insert into Descarga values ('00008','Notes', '3', '2015-10-10','CHN');
+
+
+
+
+
+
+
+-- ---------------------------------------------------------------------------
+-- 								CONSULTAS                 
+-- ---------------------------------------------------------------------------
+
+-- ------------------------------------------------------------------------------------------------
+-- #1. Incluye Todas las tablas y todos sus valores
+-- ------------------------------------------------------------------------------------------------
+select * FROM TiendaAplicaciones.Empresa_Servicio;
+Select * from TiendaAplicaciones.aplicaciones;
+select * from TiendaAplicaciones.Empleados; 
+select * from TiendaAplicaciones.Usuario;
+select * from TiendaAplicaciones.Tienda_App;
+select * from TiendaAplicaciones.Descarga;
+select * from TiendaAplicaciones.Realizan;
+select * from TiendaAplicaciones.Trabajan;
+
+-- ------------------------------------------------------------------------------------------------
+-- #2. Las tres empresas fundadas más reciente
+-- ------------------------------------------------------------------------------------------------
+Select 
+	Nombre_E as 'Nombre de la Empresa',
+	Ano_fundacion as 'Año de fundacion'
+From Empresa_Servicio
+order by Ano_fundacion desc
+limit 3 ;
+
+-- ------------------------------------------------------------------------------------------------
+-- #3 Puntuación Promedio de Cada Aplicación. 
+-- --------------------------------------------------------------------------------------------------
+
+SELECT NombreApp, AVG(Puntuacion) AS 'Puntuacion Promedio'
+FROM Descarga
+GROUP BY NombreApp;
+
+
+-- ------------------------------------------------------------------------------------------------
+-- #4 Ordenar Lista de nombre de clientes en orden descendiente.
+-- ------------------------------------------------------------------------------------------------
+
+select Nombre as 'Lista de nombres descendiente'
+from Usuario
+order by Nombre desc;
+
+-- ------------------------------------------------------------------------------------------------
+-- #5 Precio Incrementado de Aplicaciones cuyo precio es mayor de 1 euro
+-- ------------------------------------------------------------------------------------------------
+
+select NombreApp,Precio
+, (case when (Precio>1)   then  round(Precio * 1.05,2)				 
+  else round(precio * 1.00,2) end  ) as 'Precio Incrementado'
+  from Aplicaciones;
+
+-- ------------------------------------------------------------------------------------------------
+-- #6 
+-- ------------------------------------------------------------------------------------------------
+
+select NombreApp
+from Aplicaciones							-- -----------------------------------
+where Precio>0 and Precio<4					-- Aplicaciones con un precio mayor Aplicaciones
+order by Precio asc;						-- con un precio mayor que 0 y menor que 4.
+											-- ------------------------------------
+select NombreApp
+from Aplicaciones							-- -------------------------------------
+where Precio = 0							-- Aplicaciones que son Gratis.
+order by NombreApp asc;						-- -------------------------------------
+
+
+-- ------------------------------------------------------------------------------------------------
+-- #7 
+-- ------------------------------------------------------------------------------------------------
+select D.NombreApp as 'Nombre de App' , A.Precio as 'Precio'
+from Descarga as D inner join Aplicaciones as A
+	on A.NombreApp = D.NombreApp
+where Precio in(								-- -----------------------------------------
+	select Precio								-- Aplicaciones Descargadas con Precio > 0 -
+    from Aplicaciones							-- -----------------------------------------
+    where Precio >0 );
+    
+
+select distinct(pais)
+from Descarga as D inner join Aplicaciones as A			
+	on A.NombreApp = D.NombreApp 					-- -----------------------------------------
+where Precio in(									-- Paises en donde se han vendido Aplicaciones
+	select Precio								    -- cuyo Precio > 0 							-
+    from Aplicaciones								-- -----------------------------------------
+    where Precio > 0);
+ 
+ 
+-- ------------------------------------------------------------------------------------------------
+-- #8 País donde los usuarios  más aplicaciones se han descargado
+-- ------------------------------------------------------------------------------------------------    
+SELECT  Pais, COUNT(*) as 'Total Descargas'
+FROM Descarga
+GROUP BY Num_Cuenta, Pais
+HAVING COUNT(*) > 1;
+    
+    -- ------------------------------------------------------------------------------------------------
+-- #9 Nombre de los Clientes y las Aplicciones que Instalaron.
+-- ------------------------------------------------------------------------------------------------  
+
+select U.Nombre as 'Nombre del Usuario' ,D.NombreApp as 'Nombre de aplicación'
+from Usuario as U Inner Join Descarga as D Inner Join Aplicaciones as A
+	on U.Num_Cuenta = D.Num_Cuenta and D.NombreApp = A.NombreApp;
+     
+    
+    
+-- ------------------------------------------------------------------------------------------------
+-- #10 empleados que comenzaron a trabajar en empresas durante el 2004 y 2010.
+-- ------------------------------------------------------------------------------------------------  
+    
+select distinct T.DNI as 'DNI de empleado',T.Nombre_E as 'Empresa' ,Fecha_Ini as 'Fecha de Inicio'
+from Empleados as E inner join Trabajan as T
+where E.DNI=T.DNI and Fecha_Ini  between '2004' and '2010' 
+order by Fecha_Ini asc;
+    
+ -- ------------------------------------------------------------------------------------------------
+-- #11 Categoria de la Aplicacion Wework. Utilizando %%.
+-- ------------------------------------------------------------------------------------------------     
+    
+select A.NombreApp,Category
+from Aplicaciones as A inner join Realizan as R 
+	on R.NombreApp = A.NombreApp
+where A.NombreApp like '%Wework%';
+
+   -- ------------------------------------------------------------------------------------------------
+-- #12  Desplega el DNI del EMpleado y la Empresa de aquellos empleados que vivan en una calle que termina con letra E. 
+-- ------------------------------------------------------------------------------------------------     
+select DNI,Nombre_E
+from Trabajan
+where DNI in (
+	select DNI
+	from Empleados 
+	where Calle like '%e'
+);
+    
+   -- ------------------------------------------------------------------------------------------------
+-- #13 Empleados que han trabajado en más de una compañia 
+-- ------------------------------------------------------------------------------------------------   
+SELECT  dni as "DNI del empleado"
+FROM Trabajan
+GROUP BY dni
+HAVING COUNT(dni) >1;
+
+
+
+   -- ------------------------------------------------------------------------------------------------
+-- #14 Determinando cuando dinero gasto cada usuario al instalar las aplicaciones
+-- ------------------------------------------------------------------------------------------------   
+
+SELECT D.Num_Cuenta ,A.Precio*COUNT(D.Num_Cuenta) as 'Total Gastado'
+FROM Descarga as D inner join Aplicaciones as A
+	on D.NombreApp=A.NombreApp
+group by D.Num_Cuenta,A.Precio
+ order by D.Num_Cuenta;
+
+   -- ------------------------------------------------------------------------------------------------
+-- #15 Cantidad de Aplicaciones Instaladas 
+-- ------------------------------------------------------------------------------------------------  
+
+SELECT NombreApp, COUNT(NombreApp) AS "Apps Instaladas"
+FROM Descarga
+GROUP BY NombreApp
+
+UNION ALL
+
+SELECT 'Total' NombreApp, COUNT(NombreApp)
+FROM Descarga;
+
+
+
+-- ------------------------------------------------------------------------------------------------
+-- # VISTAS - Crea una tabla enseña que las tiendas en las que se venden las aplicaciones. Detalle: Hay Aplicaciones exclusivas a ciertas tiendas. 
+-- ------------------------------------------------------------------------------------------------
+drop view if exists AplicacionesEnTienda;
+create view AplicacionesEnTienda (NombreApp,NombreT,Nombre_E) as 
+select  R.NombreApp,TA.NombreT,R.Nombre_E 
+from  Tienda_App as TA inner join Realizan as R
+	on R.Nombre_E=TA.Nombre_E ;
+
+
+-- ------------------------------------------------------------------------------------------------
+-- # Trigger que suma 10 euros al Precio del Aplicacion que comienza con el codigo '001'.
+-- ------------------------------------------------------------------------------------------------
+use TiendaAplicaciones;
+drop table if exists AplicacionesDescuento;
+drop trigger if exists actualizPrecio_;
+create table AplicacionesDescuento (
+	NombreApp_ varchar(20) not null,
+    Codigo_ char(5),
+    Memoria_ varchar(10),
+    Precio_ decimal(6,2),
+    Category_ varchar(20)
+    );
+delimiter //
+create trigger actualizPrecio_ before update
+on Aplicaciones for each row
+begin 
+	insert into AplicacionesDescuento values (old.NombreApp,old.Codigo,old.Memoria,new.Precio,old.Category);
+end//
+
+update Aplicaciones
+set Precio = Precio+10.00
+where Codigo = '001';
+
+
